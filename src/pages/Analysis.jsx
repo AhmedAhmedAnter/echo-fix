@@ -60,16 +60,20 @@ export default function Analysis() {
 
         if (action === 'fix') {
             const initialMessage = `أهلاً بك! أنا Fixer 🤖. قرار حكيم. إليك خطة إصلاح لـ "${analysisResult.detected}":\n\n${analysisResult.fixSuggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}\n\nكيف يمكنني مساعدتك في الخطوة الأولى؟`;
-            const newChat = {
-                id: productId,
-                productId: productId,
-                productName: currentUpload.title,
-                messages: [{ sender: 'ai', text: initialMessage, time: new Date().toLocaleTimeString() }]
-            };
-            setMessages(prev => ({ ...prev, [productId]: newChat.messages }));
-            setCurrentUpload({ images: [], description: '', title: '' });
-            setAnalysisResult(null);
-            navigate('/chat', { state: { productId, product: newProduct } });
+
+            // Save messages first
+            setMessages(prev => ({
+                ...prev,
+                [productId]: [{ sender: 'ai', text: initialMessage, time: new Date().toLocaleTimeString() }]
+            }));
+
+            // Navigate to chat with product data
+            setTimeout(() => {
+                navigate('/chat', { state: { productId, product: newProduct } });
+                // Clear after navigation is initiated
+                setCurrentUpload({ images: [], description: '', title: '' });
+                setAnalysisResult(null);
+            }, 100);
         }
     };
 
