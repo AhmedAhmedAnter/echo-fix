@@ -22,18 +22,20 @@ export default function Chat() {
     const handleSend = async () => {
         if (!inputValue.trim()) return;
 
-        const newMsg = { sender: 'user', text: inputValue, time: new Date().toLocaleTimeString() };
+        const messageText = inputValue.trim();
+        const newMsg = { sender: 'user', text: messageText, time: new Date().toLocaleTimeString() };
+
+        // Clear input immediately
+        setInputValue('');
 
         setMessages(prev => {
             const chatMsgs = prev[productId] || [];
             return { ...prev, [productId]: [...chatMsgs, newMsg] };
         });
 
-        setInputValue('');
-
         // Get AI response
         try {
-            const aiText = await sendChatMessage(inputValue, chatMessages, product);
+            const aiText = await sendChatMessage(messageText, chatMessages, product);
             const aiReply = {
                 sender: 'ai',
                 text: aiText,
