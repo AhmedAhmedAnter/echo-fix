@@ -8,6 +8,12 @@ export default function UploadPage() {
     const navigate = useNavigate();
     const { currentUpload, setCurrentUpload, setAnalysisResult, setIsAnalyzing, isAnalyzing, showNotification } = useApp();
 
+    // Clear previous analysis when entering upload page
+    React.useEffect(() => {
+        setAnalysisResult(null);
+        setCurrentUpload({ images: [], description: '', title: '' });
+    }, []);
+
     const handleImageUpload = (e) => {
         const fileList = e.target.files;
         if (!fileList || fileList.length === 0) return;
