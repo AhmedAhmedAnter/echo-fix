@@ -31,14 +31,23 @@ export function AppProvider({ children }) {
         const storedProducts = JSON.parse(localStorage.getItem('echo_products') || '[]');
         const storedMessages = JSON.parse(localStorage.getItem('echo_messages') || '{}');
         const storedCart = JSON.parse(localStorage.getItem('echo_cart') || '[]');
-        const storedSession = JSON.parse(localStorage.getItem('echo_current_user'));
+        const storedSessionString = localStorage.getItem('echo_current_user');
 
         setUsers(storedUsers);
         setProducts(storedProducts);
         setMessages(storedMessages);
         setCart(storedCart);
-        if (storedSession) {
-            setUser(storedSession);
+
+        if (storedSessionString && storedSessionString !== 'null') {
+            try {
+                const storedSession = JSON.parse(storedSessionString);
+                if (storedSession && storedSession.id) {
+                    setUser(storedSession);
+                }
+            } catch (e) {
+                console.error('Error parsing user session:', e);
+                localStorage.removeItem('echo_current_user');
+            }
         }
     }, []);
 
